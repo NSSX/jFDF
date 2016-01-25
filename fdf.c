@@ -23,43 +23,7 @@ int couleur(double t)
 }
 
 char ***set_coordq(char ***coord, float i, float x, float y, float zoom);
-char ***set_coord2(char ***coord, int i, int x, int y, int zoom);
 char ***set_coord3(char ***coord, int i, int x, int y, int zoom, int rotate);
-
-void draw_line2(void *mlx, void *win, float xi, float yi, float xf, float yf, int color)
-{
-  int dx,dy,i,xinc,yinc,cumul,x,y ;
-  x = xi ;
-  y = yi ;
-  dx = xf - xi ;
-  dy = yf - yi ;
-  xinc = ( dx > 0 ) ? 1 : -1 ;
-  yinc = ( dy > 0 ) ? 1 : -1 ;
-  dx = abs(dx) ;
-  dy = abs(dy) ;
-
-    mlx_pixel_put(mlx, win, x, y, color);
-  if ( dx > dy ) {
-    cumul = dx / 2 ;
-    for ( i = 1 ; i <= dx ; i++ ) {
-      x += xinc ;
-      cumul += dy ;
-      if ( cumul >= dx ) {
-	cumul -= dx ;
-	y += yinc ; }
-
-	mlx_pixel_put(mlx, win, x, y, color); } }
-  else {
-    cumul = dy / 2 ;
-    for ( i = 1 ; i <= dy ; i++ ) {
-      y += yinc ;
-      cumul += dx ;
-      if ( cumul >= dy ) {
-	cumul -= dy ;
-	x += xinc ; }
-
-	mlx_pixel_put(mlx, win, x, y, color); } }
-}
 
 void draw_line_on_img(t_img *myimg,float xi, float yi, float xf, float yf, int color)
 {
@@ -129,26 +93,6 @@ char *ft_strjoins(char const *s1, char const *s2)
   len2 = ft_strlen(s2);
   join = ft_join(s1, s2, len1, len2);
   return (join);
-}
-
-void fill_iso_rect(void *mlx, void *win, int x, int y, int t,int color)
-{
-  draw_line2(mlx, win, x, y, x + t, y - t, color);
-  draw_line2(mlx, win, x + t, y - t, x + (t * 2), y, color);
-  draw_line2(mlx, win, x+(t * 2), y, x + t, y + t, color);
-  draw_line2(mlx, win, x + t, y + t, x, y, color);
-}
-
-void legend(t_struct *param)
-{
-  mlx_string_put(param->mlx, param->win, 0, 0, 0x00FFFF, "Commande Disponible :");
-  mlx_string_put(param->mlx, param->win, 0, 25, 0x00FFFF, "Zoom + : Q  | Zoom - : E");
-  mlx_string_put(param->mlx, param->win, 0, 60, 0x00FFFF, "Deplacement :");
-  mlx_string_put(param->mlx, param->win, 0, 80, 0x00FFFF, "Gauche : A");
-  mlx_string_put(param->mlx, param->win, 0, 100, 0x00FFFF, "Droite : D");
-  mlx_string_put(param->mlx, param->win, 0, 120, 0x00FFFF, "Haut : W");
-  mlx_string_put(param->mlx, param->win, 0, 140, 0x00FFFF, "Bas : S");
-  mlx_string_put(param->mlx, param->win, 0, 160, 0x00FFFF, "Return : R");
 }
 
 void place_img(t_struct *param, float xd, float yd)
@@ -463,57 +407,42 @@ int testa(x1,y1,x2,y2)
   return (1);
 }
 
+int color2(int val1, int val2, int color)
+{
+  if(val1 + val2 >= 30 && val1 + val2 <= 60)
+    color = 0x167341;
+  else if(val1 + val2 >= 61 && val1 + val2 <= 90)
+    color = 0xDE5A39;
+  else if(val1 + val2 >= 91 && val1 + val2 <= 130)
+    color = 0x5D6ADC;
+  else if(val1 + val2 >= 131 && val1 + val2 <= 200)
+    color = 0xFF99CC;
+  else if(val1 + val2 >= 201 && val1 + val2 <= 350)
+    color = 0x161D5F;
+  else
+    color = 0xFFFFFF;
+  return (color);
+}
+
 int give_color(int val1, int val2)
 {
   int color;
 
   color = 0;
   if(val1 + val2 < 0)
-    {
-      color = 255 + (val1 + val2);
-    }
+    color = 255 + (val1 + val2);
   else if(val1 + val2 >= 0 && val1 + val2 <= 3)
-    {
-      color = 0xCCCC00;
-    }
+    color = 0xCCCC00;
   else if(val1 + val2 >= 4 && val1 + val2 <= 8)
-    {
-      color = 0x4C9900;
-    }
+    color = 0x4C9900;
   else if(val1 + val2 >= 9 && val1 + val2 <= 13)
-    {
-      color = 0xFF8000;
-    }
+    color = 0xFF8000;
   else if(val1 + val2 >= 14 && val1 + val2 <= 21)
-    {
-      color = 0xFF6666;
-    }
+    color = 0xFF6666;
   else if(val1 + val2 >= 22 && val1 + val2 <= 29)
-    {
-      color = 0x6600CC;
-    }
-  else if(val1 + val2 >= 30 && val1 + val2 <= 60)
-    {
-      color = 0x167341;
-    }
-  else if(val1 + val2 >= 61 && val1 + val2 <= 90)
-    {
-      color = 0xDE5A39;
-    }
-  else if(val1 + val2 >= 91 && val1 + val2 <= 130)
-    {
-      color = 0x5D6ADC;
-    }
-  else if(val1 + val2 >= 131 && val1 + val2 <= 200)
-    {
-      color = 0xFF99CC;
-    }
-  else if(val1 + val2 >= 201 && val1 + val2 <= 350)
-    {
-      color = 0x161D5F;
-    }
-  else
-    color = 0xFFFFFF;
+    color = 0x6600CC;
+   else
+     color = color2(val1, val2, color);
   return (color);
 }
 
@@ -620,13 +549,6 @@ void    my_pixel_put_to_image(t_img *myimg,int x, int y, int color)
   color /= 256;
   myimg->  data[y * myimg->sizeline + x * myimg->bpp / 8 + 2] = color % 256;
 }
-
-int dothis()
-{
-  ft_putstr("lol");
-  return (0);
-}
-
 
 t_struct *give(t_struct *mystruct, void *mlx, void *win)
 {
